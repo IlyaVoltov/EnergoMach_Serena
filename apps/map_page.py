@@ -1,5 +1,5 @@
 """
-    Вторая страница:
+    Первая страница:
         - карта ...;
 """
 
@@ -13,16 +13,16 @@ import plotly.express as px
 import pandas as pd
 
 """ READ DATA """
-df = pd.read_csv('data//dataSERENA.csv')
+df = pd.read_csv('data//dataFE.csv')
 number_name = df.number
 site_lat = df.lat
 site_lon = df.lon
-locations_name = df.adress
-note_name = df.note
-type_name = df.type
-description_name = df.description
-inference_name = df.inference
-party_name = df.party.unique()
+region_name = df.region
+city_name = df.city
+wind_name = df.wind
+rain_name = df.rain
+date_name = df.date
+probability_name = df.probability
 
 
 """ LAYOUT """
@@ -31,74 +31,40 @@ mapbox_access_token = open("data//token.mapbox_token").read()
 fig = go.Figure()
 
 fig.add_trace(go.Scattermapbox(
-    name='Все объекты проверки',
+    name='Центры регионов',
     lat=site_lat,
     lon=site_lon,
     mode='markers',
     marker=go.scattermapbox.Marker(
-        size=17,
+        size=21,
         opacity=0.8,
         color='rgb(0, 255, 44)',
-        symbol='circle'
-    ),
-    text=locations_name,
+        ),
+    text=region_name,
     hoverinfo='text'
 ))
 
-'''fig.add_trace(go.Scattermapbox(
-    name='Акт БУ/БД',
-    lat=['60.018156', '60.039324', '60.011986', '60.055470'],
-    lon=['30.398639', '30.375849', '30.428499', '30.361727'],
+fig.add_trace(go.Scattermapbox(
+    name='Регионы с вероятностью аварии',
+    lat=['56.1281561', '48.7072005', '59.2484186', '51.6592378'],
+    lon=['40.4082995', '44.5170207', '39.8356461', '39.1968284'],
     mode='markers',
     marker=go.scattermapbox.Marker(
-        size=9,
+        size=12,
         opacity = 0.8,
-        color = 'rgb(10, 120, 240)',
+        color = 'rgb(254, 1, 1)',
         symbol = 'circle'
     ),
-    text=["Гражданский пр-кт, д 90 к 2.", "пр-кт Культуры, д 11 к 7.", "ул. Карпинского, д 36 к 1.",
-          "Придорожная аллея, дом 18, литера А."],
+    text=["Ветер и гроза", "Ветер и гроза", "Ветер и гроза",
+          "Ветер и гроза"],
     hoverinfo='text'
-))'''
-
-'''fig.add_trace(go.Scattermapbox(
-    name='Замечаний нет',
-    lat=['60.046050', '60.078666', '60.037539', '60.042074', '60.042271', '60.022656', '60.007492', '60.053179', '60.038510', '60.007834'],
-    lon=['30.324582', '30.337140', '30.381966', '30.375723', '30.379882', '30.326953', '30.423262', '30.323468', '30.331652', '30.368518'],
-    mode='markers',
-    marker=go.scattermapbox.Marker(
-        size=9,
-        opacity = 0.8,
-        color = 'rgb(255, 0, 29)',
-        symbol = 'circle'
-    ),
-    text=["пр-кт Луначарского, д 40 к. 4 литер а.", "ул. Валерия Гаврилина, д 11 к. 1 стр 1.", "ул. Демьяна Бедного, д 10 к 1 литер а.",
-          "пр-кт Культуры, д 17.", "пр-кт Просвещения, д 53 к 4 литер а.", "пр-кт Тореза, д 112 к 1 литер а.",
-          "ул. Карпинского, д 20.", "ул. Хошимина, участок  14 (юго-западнее пересечения с пр. Просвещения).", "ул. Есенина, участок 27 (западнее дома 7 лит.А по ул.Есенина)."
-        "ул. Политехническая, 28, литера А."],
-    hoverinfo='text'
-))'''
-
-'''fig.add_trace(go.Scattermapbox(
-    name='Отказ в доступе',
-    lat=['60.062364'],
-    lon=['30.287526'],
-    mode='markers',
-    marker=go.scattermapbox.Marker(
-        size=9,
-        opacity = 0.8,
-        color = 'rgb(0, 150, 254)',
-        symbol = 'circle'
-    ),
-    text=["Береговая улица, дом 32, корпус 5, литера А."],
-    hoverinfo='text'
-))'''
+))
 
 fig.update_layout(
     legend=dict(
         x=0,
         y=1,
-        title_text='Результаты проверки (нажмите)',
+        title_text='Легенда карты (нажмите)',
         title_font_family="Rockwell",
         font=dict(
             family="Rockwell",
@@ -107,9 +73,9 @@ fig.update_layout(
         ),
         bgcolor="LightCyan",
         bordercolor="Cyan",
-        borderwidth=1
+        borderwidth=2
     ),
-    title='Проверка - Система УПЭ - 3ья партия адресов',
+    title='Интерактивная карта аварийных отключений',
     font=dict(
         family="Rockwell",
         size=17,
@@ -127,40 +93,65 @@ fig.update_layout(
         accesstoken=mapbox_access_token,
         bearing=0,
         center=dict(
-            lat=60.026,
-            lon=30.314
+            lat=56.25,
+            lon=40.15
         ),
         pitch=0,
-        zoom=9,
-        style='light'
+        zoom=5,
+        style='satellite'
     ),
 )
+
+column_names = [{"name": "№", "id": "number"},
+                #{"name": "Широта", "id": "lat"},
+                #{"name": "Долгота", "id": "lon"},
+                {"name": "Регион", "id": "region"},
+                {"name": "Центр региона", "id": "city"},
+                {"name": "Ветер, м/с", "id": "wind"},
+                {"name": "Дождь", "id": "rain"},
+                {"name": "Температура", "id": "temperature"},
+                {"name": "Прогноз на", "id": "date"},
+                {"name": "Процент вероятности аварии", "id": "probability"},
+                ]
 
 PAGE_SIZE = 6
 
 app = dash.Dash(__name__)
 server = app.server
+
 app.layout = html.Div([
+    html.H1('Hackathon EnergoMach. Team "Serena SK".'),
     dcc.Graph(
         figure=fig,
-        id='map'),
+        id='map',
+         style={'color': 'blue',
+            'margin': '0',
+            'padding': '0',
+            'width': '100%',
+            'height': '850px'}),
     html.Pre(
         id='relayout-data'),
     dash_table.DataTable(
-    id='table',
-    columns=[{"name": i, "id": i, 'editable': (i == 'note_name')} for i in df.columns],
-    style_data_conditional=[{
-        'if': {'column_editable': False},
-        'backgroundColor': 'rgb(30, 30, 30)',
-        'color': 'white'
-    }],
-    style_header_conditional=[{
-        'if': {'column_editable': False},
-        'backgroundColor': 'rgb(30, 30, 30)',
-        'color': 'white'
-    }],
-    data=df.to_dict('records'),
-)
+        id='table',
+        columns=column_names,
+        style_data_conditional=[{
+            'if': {'column_editable': False},
+            'textAlign': 'center'
+        }],
+        style_header_conditional=[{
+            'if': {'column_editable': False},
+            'textAlign': 'center',
+            'textDecoration': 'underline',
+            'textDecorationStyle': 'dotted',
+            'backgroundColor': 'rgb(30, 30, 30)',
+            'color': 'white'
+        }],
+        data=df.to_dict('records'),
+        filter_action='native',
+        page_action="native",
+        page_current= 0,
+        page_size= 10,
+    )
 ])
 
 @app.callback(
@@ -170,9 +161,6 @@ def change(clickData):
     if clickData is not None:
         return df[df['adress'] == clickData['points'][0]['text']].to_dict('records')
     return df.to_dict('records')
-
-
-""" CALLBACKS """
 
 if __name__ == '__main__':
     app.run_server(debug=True, use_reloader=True)
