@@ -121,11 +121,11 @@ y = pog_rf_2020.if_acc
 X = pd.get_dummies(X)
 
 import sklearn  #перенести на верх
-from sklearn.model_selection import train_test_split  #перенести на верх
+from sklearn.model_selection import train_test_split  #перенести наверх
 X_train, X_test, y_train, y_test = train_test_split(X, y) 
 
 from sklearn import tree  #перенести на верх
-from sklearn.model_selection import GridSearchCV  #перенести на верх
+from sklearn.model_selection import GridSearchCV  #перенести наверх
 clf = tree.DecisionTreeClassifier()
 
 parameters = {'max_depth':range(1,5), 'min_samples_split':range(2,5), 'min_samples_leaf':range(1,5)}
