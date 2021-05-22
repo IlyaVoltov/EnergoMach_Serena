@@ -9,3 +9,13 @@ project for the EnergoMach hackathon of the Serena team
 /assets/ - директория для стилей plotly
 
 /data/ - директория для начальных данных проекта и записи результатов
+
+
+
+Основной стек технологий:
+HTML, CSS, Python
+Git
+
+Демо
+Демо сервиса доступно по адресу: 
+
