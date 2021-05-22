@@ -3,7 +3,7 @@ project for the EnergoMach hackathon of the Serena team
 
 
 структура проекта:
-/apps/ - деректория алгоритмов и дополнительних страниц проекта на plotly
+/apps/ - директория алгоритмов и дополнительних страниц проекта на plotly
 
 /assets/ - директория для стилей plotly
 
