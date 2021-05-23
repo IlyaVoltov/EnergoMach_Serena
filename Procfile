@@ -1,0 +1,1 @@
+web: gunicorn map_page:server
