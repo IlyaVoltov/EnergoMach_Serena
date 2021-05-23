@@ -1,9 +1,17 @@
-# Посмотрим на данные с помощью библиотеки sweeetviz
-pip install sweetviz
+#!/usr/bin/env python
+# coding: utf-8
+
+"""
+    Алгоритм машинного обучения - градиентный бустинг.
+    Предварительная обработка входных данных.
+"""
 
 import sweetviz as sv
-
 import pandas as pd
+from imblearn.under_sampling import RandomUnderSampler
+import sklearn
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import GradientBoostingClassifier
 
 av_pr_sac_2020 = pd.read_excel('Аварии_Причины_САЦ_2020.xlsx')
 
@@ -102,26 +110,22 @@ y = pog_rf_2020.if_acc
 X = pd.get_dummies(X)
 
 # Поскольку имеет место большая несбалансированность классов, используем undersampling - сократим число объектов мажоритарного класса
-pip install imblearn
-from imblearn.under_sampling import RandomUnderSampler
 rus = RandomUnderSampler(sampling_strategy=0.3)
 X_rus, y_rus = rus.fit_resample(X, y)
 
 # Разобъем все множество на train/test в соотношении 3 к 1 (установленное по дефолту)
-import sklearn
-from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X_rus, y_rus)
 
 # Обучим модель градиентного бустинга. При этом найдем его оптимальные гиперпараметры поиском по сетке GridSearch с кросс-валидацией на 5 фолдов
-from sklearn.ensemble import GradientBoostingClassifier
 clf_gb = GradientBoostingClassifier()
 parameters_gb = {'n_estimators':range(1,8), 'max_depth':range(1,8), 'min_samples_split':range(2,8)}
 search_gb = GridSearchCV(clf_gb, parameters_gb, cv = 5)
 search_gb.fit(X_train, y_train)
 best_gb = search_gb.best_estimator_
+'''Можем вывести в консоль параметры модели:
 print('Параметры лучшего градиентного бустинга', search_gb.best_params_)
 print('Точность лучшего градиентного бустинга на train set:', best_gb.score(X_train, y_train))
-print('Точность лучшего градиентного бустинга на test set:', best_gb.score(X_test, y_test))
+print('Точность лучшего градиентного бустинга на test set:', best_gb.score(X_test, y_test))'''
 
 # Теперь с помощью обученной на исторических данных модели градиентного бустинга предскажем вероятности отключений на 24 и 25 мая в регионах РФ
 progn_24_05 = pd.read_excel('Прогноз_24_05_2021.xlsx')
